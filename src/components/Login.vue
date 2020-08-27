@@ -50,28 +50,29 @@
 </template>
 
 <script>
-    export default {
-        name: "Login",
-        data(){
-            const item = {
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            };
-            return {
-                tableData: Array(12).fill(item),
-                isCollapse: true
-            }
-        }, methods: {
-            handleOpen(key, keyPath) {
-                console.log(key, keyPath);
-            },
-            handleClose(key, keyPath) {
-                console.log(key, keyPath);
-            }
-        }
-
+export default {
+  name: 'Login',
+  data () {
+    const item = {
+      date: '2016-05-02',
+      name: '王小虎',
+      address: '上海市普陀区金沙江路 1518 弄'
     }
+    return {
+      tableData: Array(12).fill(item),
+      isCollapse: true
+    }
+  },
+  methods: {
+    handleOpen (key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleClose (key, keyPath) {
+      console.log(key, keyPath)
+    }
+  }
+
+}
 </script>
 
 <style scoped>

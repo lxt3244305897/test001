@@ -4,13 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-import elment from 'element-ui'
+import elmentui from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import vuex from 'Vuex'
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 Vue.use(vuex)
-Vue.use(elment)
+Vue.use(elmentui)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
