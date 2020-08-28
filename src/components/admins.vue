@@ -251,6 +251,5 @@
         color: #FFF;
         background-color: #409EFF;
         border-color: #409EFF;
-        margin-right: 11500px;
     }
 </style>
