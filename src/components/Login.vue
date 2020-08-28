@@ -4,22 +4,15 @@
         <el-header style="text-align: right; font-size: 12px" >
             <el-dropdown>
                 <i class="el-icon-setting" style="margin-right: 15px"></i>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>查看</el-dropdown-item>
-                    <el-dropdown-item>新增</el-dropdown-item>
-                    <el-dropdown-item>删除</el-dropdown-item>
-                </el-dropdown-menu>
             </el-dropdown>
-            <span>欢迎:{{$route.params.u[0].aname}}</span>
         </el-header>
-        <el-container>
             <el-aside default-active="1-4-1" width="auto">
-                <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-                    <div v-for="lis in $route.params.lis">
+                <el-menu default-active="1-4-1" class="el-menu-vertical-demo" >
+                    <div v-for="lis in this.listd">
                     <el-submenu :index="lis.auth_id">
                         <template slot="title">
                             <i class="el-icon-message"></i>
-                            <span slot="title">{{   lis.auth_name}}</span>
+                            <span slot="title">{{lis.auth_name}}</span>
                         </template>
                         <div v-for="li in lis.qxfp1">
                             <el-menu-item-group>
@@ -30,49 +23,29 @@
                     </div>
                 </el-menu>
             </el-aside>
-            <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-                <el-radio-button :label="true">合上</el-radio-button><br>
-                <el-radio-button :label="false">展开</el-radio-button>
-            </el-radio-group>
             <el-main>
-
                 <router-view/>
-                <el-table :data="tableData" width="auto" >
-                    <el-table-column prop="date" label="日期"></el-table-column>
-                    <el-table-column prop="name" label="姓名"></el-table-column>
-                    <el-table-column prop="address" label="地址"></el-table-column>
-                </el-table>
             </el-main>
-        </el-container>
     </el-container>
+
     </div>
 
 </template>
 
 <script>
-export default {
-  name: 'Login',
-  data () {
-    const item = {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
+    export default {
+        name: "Login",
+        data(){
+            return {
+                listc:[],
+                listd:[]
+            }
+        },created:function () {
+            this.listc=localStorage.getItem('acc');
+            this.listd=localStorage.getItem('abb');
+            console.log(this.listd);
+        }
     }
-    return {
-      tableData: Array(12).fill(item),
-      isCollapse: true
-    }
-  },
-  methods: {
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
-    }
-  }
-
-}
 </script>
 
 <style scoped>

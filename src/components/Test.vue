@@ -59,12 +59,12 @@ export default {
         .then(response=>{
             if(response.data!=''){
                 this.admin=response.data;
+                localStorage.setItem('acc',JSON.stringify(this.admin))
                 this.$axios.post("http://localhost:8081/AdminsController/queryaccount?pid="+this.admin[0].pid)
                     .then(res=>{
                         if(res.data!=""){
-                            alert(res.data);
                             this.list=res.data;
-                            console.log(this.list)
+                            localStorage.setItem('abb',JSON.stringify(this.list))
                             this.$router.push({name:'Login',params:{u:this.admin,lis:this.list}})
                         }
                     })
