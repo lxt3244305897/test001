@@ -1,12 +1,52 @@
 <template>
   <div id="app">
-    <router-view/>
+
+      <router-view v-if="isRouterAlive"></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+    provide (){
+
+        return {
+
+            reload:this.reload
+
+        }
+
+    },
+
+    data(){
+
+        return {
+
+            isRouterAlive:true
+
+        }
+
+    },
+
+    methods:{
+
+        reload (){
+
+            this.isRouterAlive = false
+
+            this.$nextTick(function(){
+
+                this.isRouterAlive = true
+
+            })
+
+        }
+
+    },
+
+    components:{
+
+    }
 }
 </script>
 
@@ -18,5 +58,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+body{
+    font-family: "微软雅黑";  /*  设置字体 */
+    margin: 0px auto /* 去除上下的边距*/
 }
 </style>

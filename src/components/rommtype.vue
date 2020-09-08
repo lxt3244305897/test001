@@ -95,7 +95,6 @@ export default {
       this.$axios.post('http://localhost:8080/rommtype/update', this.tep).then(response => {
         if (this.tep !== '') {
           this.$message.success('修改成功')
-          alert(this.tep.name)
           this.dialogVisible = false
           this.listAll()
         } else {

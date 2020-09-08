@@ -2,25 +2,29 @@
     <div>
         <div class="yyy">
         <el-button type="primary" @click="showAdd()">添加管理员</el-button>
-        <el-input v-model="aname"></el-input>
+        <el-input class="cs" style="width: 256px" v-model="aname"></el-input>
         <el-button @click="getLi()">查询</el-button>
         </div>
-        <el-table :data="this.getList.slice((currentPage-1)*PageSize,currentPage*PageSize)" border style="width: 100%">
-            <el-table-column label="编号" prop="aid" width="180"></el-table-column>
-            <el-table-column label="账号" prop="account"></el-table-column>
-            <el-table-column label="密码" prop="apwd"></el-table-column>
+        <el-table :data="this.getList.slice((currentPage-1)*PageSize,currentPage*PageSize)"  border style="width: 100%; line-height: 0px">
+            <el-table-column  label="编号" prop="aid"></el-table-column>
+            <el-table-column  resizable label="账号" prop="account"></el-table-column>
+            <el-table-column  label="密码" prop="apwd"></el-table-column>
             <el-table-column label="状态" prop="astate">
                 <template slot-scope="scope">
                     {{scope.row.astate==0?'可用':'禁用'}}
                 </template>
             </el-table-column>
-            <el-table-column label="姓名" prop="aname"></el-table-column>
-            <el-table-column label="电话" prop="atel"></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="身份" prop="pid">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="showDialog(scope.row)">修改</el-button>
-                    <el-button type="text" @click="showdele(scope.row)">删除</el-button>
-                    <el-button type="text" @click="roleAdd(scope.row)">分配权限</el-button>
+                    {{scope.row.pid==1?'普通管理员':'超级管理员'}}
+                </template>
+            </el-table-column>
+            <el-table-column  label="姓名" prop="aname"></el-table-column>
+            <el-table-column label="电话" prop="atel"></el-table-column>
+            <el-table-column  label="操作">
+                <template slot-scope="scope" >
+                    <el-button style=" float:left;" type="primary" @click="showDialog(scope.row)">修改</el-button>
+                    <el-button style=" float: right;" type="success" @click="roleAdd(scope.row)">权限</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -52,33 +56,54 @@
                         </el-form-item>
                     </el-form>
                 </el-dialog>
-
-        <el-dialog width="20%"  :title=title :visible.sync="dialogVisible">
-            <el-form label-width="80px" label-suffix="：" :model="adminsUpdate" class="form" >
-                <el-form-item label="编号" prop="aid">
+        <el-dialog width="30%" title="添加管理" :visible.sync="dialogVisibled">
+            <el-form :model="ruleForm" :rules="rules2" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="编号" prop="aid" hidden>
                     <!-- 必须去声明绑定的数据模型 -->
-                    <el-input v-model="adminsUpdate.aid"></el-input>
+                    <el-input v-model="ruleForm.aid" disabled="true"></el-input>
                 </el-form-item>
-
-                <el-form-item  label="账号" prop="account" >
+                <el-form-item  label="账号" prop="account"  style="width: 400px">
                     <!-- 必须去声明绑定的数据模型 -->
-                    <el-input v-model="adminsUpdate.account"></el-input>
+                    <el-input  v-model="ruleForm.account"></el-input>
                 </el-form-item>
-                <el-form-item  label="密码" prop="apwd" >
+                <el-form-item  label="密码" prop="apwd" style="width: 400px">
+                    <!-- 必须去声明绑定的数据模型 -->
+                    <el-input v-model="ruleForm.apwd"></el-input>
+                </el-form-item>
+                <el-form-item  label="状态" prop="astate" style="width: 400px" hidden >
+                    <!-- 必须去声明绑定的数据模型 -->
+                    <el-radio v-model="ruleForm.astate" label="0">可用</el-radio>
+                    <el-radio v-model="ruleForm.astate" label="1" >禁用</el-radio>
+                </el-form-item>
+            </el-form>
+            <div style="text-align: center;padding: 0px">
+                <el-button type="primary" @click="add('ruleForm')">添加</el-button>
+                <el-button type="success" @click="dialogVisibled = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog width="30%" title="修改管理" :visible.sync="dialogVisible">
+            <el-form :model="adminsUpdate" :rules="rules3" ref="adminsUpdate" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="编号" prop="aid" >
+                    <!-- 必须去声明绑定的数据模型 -->
+                    <el-input v-model="adminsUpdate.aid" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item  label="账号" prop="account"  style="width: 400px">
+                    <!-- 必须去声明绑定的数据模型 -->
+                    <el-input  v-model="adminsUpdate.account"></el-input>
+                </el-form-item>
+                <el-form-item  label="密码" prop="apwd" style="width: 400px">
                     <!-- 必须去声明绑定的数据模型 -->
                     <el-input v-model="adminsUpdate.apwd"></el-input>
                 </el-form-item>
                 <template>
-                    <el-form-item  label="状态" prop="astate" >
-
-                        <el-radio v-model="adminsUpdate.astate"  :label="0">可用</el-radio>
-                        <el-radio v-model="adminsUpdate.astate"  :label="1">禁用</el-radio>
+                    <el-form-item  label="状态" prop="astate" style="width: 400px" >
+                        <el-radio   v-model="adminsUpdate.astate"  :label="0">可用</el-radio>
+                        <el-radio  v-model="adminsUpdate.astate"  :label="1">禁用</el-radio>
                     </el-form-item>
                 </template>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" v-show="editB" @click="edit()">修改</el-button>
-                <el-button type="primary" v-show="adduser" @click="add()">添加</el-button>
+            <div style="text-align: center;padding: 0px">
+                <el-button type="primary" @click="edit('adminsUpdate')">修改</el-button>
                 <el-button type="success" @click="dialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -90,7 +115,43 @@
     export default {
         name: "admins",
         data() {
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('账号不能为空'));
+                } else {
+                    callback();
+                }
+            };
+            var validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('密码不能为空'));
+                }else {
+                    callback();
+                }
+            };
+
             return {
+                rules3: {
+                    account: [
+                        {min:2,max:10,message:'账号是2-10位',trigger:['change','blur']},
+                        { validator: validatePass, trigger: 'blur' }
+                    ],
+                    apwd: [
+                        {min:4,max:10,message:'密码中4-10位',trigger:['change','blur']},
+                        { validator: validatePass2, trigger: 'blur' }
+                    ]
+                },rules2: {
+                    account: [
+                        {required:true,message:'用户名不能为空',trigger:'blur'},
+                        {min:2,max:10,message:'账号是2-10位',trigger:['change','blur']},
+
+                    ],
+                    apwd: [
+                        {required:true,message:'密码不能为空',trigger:'blur'},
+                        {min:4,max:10,message:'密码中4-10位',trigger:['change','blur']},
+                    ]
+                },
+                ruleForm:{},
                 title: "修改员工",
                 editB: false,
                 dialogVisible: false,
@@ -100,6 +161,7 @@
                 getList: [],
                 adminRole:[],
                 addBtnLoading:false,
+                dialogVisibled:false,
                 getrole:[],
                 listd:[],
                 ropid:'',
@@ -122,7 +184,11 @@
             }
         },
         created: function () {
-            this.listd=JSON.parse(localStorage.getItem('acc'));
+            var aid=JSON.parse(localStorage.getItem('acc'))
+            this.$axios.post("http://localhost:8081/AdminsController/queryaid?aid="+aid)
+                .then(res=>{
+                        this.listd=res.data;
+                });
             this.getLi();
         },
         methods:{
@@ -151,20 +217,29 @@
                     }
                 })
             },
-            edit:function () {
-                this.$axios.post("http://localhost:8081/AdminsController/update",this.adminsUpdate).then(res=>{
-                    this.dialogVisible = false;
-                    this.getLi()
-                })
-            },getCheckedKeys () {
-                let str = ''
+            edit(adminsUpdate) {
+                this.$refs[adminsUpdate].validate((valid) => {
+                    if (valid) {
+                        this.$axios.post("http://localhost:8081/AdminsController/update",this.adminsUpdate).then(res=>{
+                            this.dialogVisible = false;
+                            this.getLi()
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            }   ,getCheckedKeys () {
+                let str = '';
                 for (let p = 0; p < this.$refs.tree.getCheckedKeys().length; p++) {
-                    console.log(this.$refs.tree.getCheckedKeys()[p])
+                    console.log(this.$refs.tree.getCheckedKeys()[p]);
                     if (p < this.$refs.tree.getCheckedKeys().length - 1) {
                         str += this.$refs.tree.getCheckedKeys()[p] + ','
+
                     } else {
                         str += this.$refs.tree.getCheckedKeys()[p]
                     }
+                    console.info(str);
                 }
                 this.$axios.post("http://localhost:8081/AdminsController/roleA?auth_id="+str+"&pid="+this.ropid).then(response => {
                         if (response.data >= 1) {
@@ -172,8 +247,8 @@
                                 showClose: true,
                                 message: '修改成功',
                                 type: 'success'
-                            })
-                            this.authorityVisible = false
+                            });
+                            this.dialogTableVisible = false;
                         } else {
                             this.$message({
                                 showClose: true,
@@ -192,26 +267,26 @@
             },'showDialog': function (row) {
                 this.dialogVisible = true;
                 this.adminsUpdate = row;
-                this.editB = true;
-                this.adduser = false
-                this.title="修改信息"
             },'showdele': function (row) {
                 this.$axios.post("http://localhost:8081/AdminsController/delete?aid="+row.aid).then(res=>{
                     this.dialogVisible = false;
                     this.getLi()
                 })
             },'showAdd': function () {
-                this.adminsUpdate = {astate: 0};
-                this.dialogVisible = true;
-                this.adduser = true;
-                this.editB = false;
-                this.title="添加管理员"
-            },
-            'add':function () {
-                this.$axios.post("http://localhost:8081/AdminsController/add",this.adminsUpdate).then(res=>{
-                    this.dialogVisible = false;
-                    this.getLi()
-                })
+                this.dialogVisibled = true;
+                this.ruleForm.astate=0;
+            },add(ruleForm) {
+                this.$refs[ruleForm].validate((valid) => {
+                    if (valid) {
+                        this.$axios.post("http://localhost:8081/AdminsController/add",this.ruleForm).then(res=>{
+                            this.dialogVisibled = false;
+                            this.getLi()
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
             },'roleAdd': function (row) {
                     this.dialogTableVisible = true;
                     this.ropid=row.pid;
@@ -231,7 +306,10 @@
 </script>
 
 <style scoped>
-    .el-input {
+   .el-table{
+        border-bottom: 0px solid #EBEEF5;
+    }
+    #cs {
         position: relative;
         font-size: 14px;
         display: inline-block;
@@ -251,5 +329,8 @@
         color: #FFF;
         background-color: #409EFF;
         border-color: #409EFF;
+    }
+    .el-table_6_column_42 is-leaf{
+        width: 490px;
     }
 </style>

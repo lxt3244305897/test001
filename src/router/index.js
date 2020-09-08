@@ -20,10 +20,35 @@ export default new Router({
       component:Login,
       children: [
               {
-                  path: '/admins',
+                  path: 'admins',
                   name: 'admins',
                   component: () => import('../components/admins')
-              }
+              },
+          {
+              path: 'users',
+              name: 'users',
+              component: () => import('../components/users')
+          },
+          {
+              path: 'bnbin',
+              name: 'bnbin',
+              component: () => import('../components/bnbin')
+          },
+          {
+              path: 'replay',
+              name: 'replay',
+              component: () => import('../components/replay')
+          },
+          {
+              path: 'replay',
+              name: 'replay',
+              component: () => import('../components/replay')
+          },
+          {
+              path: 'orders',
+              name: 'orders',
+              component: () => import('../components/orders')
+          }
           ]
       }
   ]
